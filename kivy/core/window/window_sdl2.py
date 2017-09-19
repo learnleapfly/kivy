@@ -504,8 +504,6 @@ class WindowSDL(WindowBase):
                     self._do_resize_ev = ev
                 else:
                     ev()
-
-            elif action == 'windowresized':
                 self.canvas.ask_update()
 
             elif action == 'windowrestored':
