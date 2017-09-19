@@ -509,30 +509,38 @@ class WindowSDL(WindowBase):
                 self.canvas.ask_update()
 
             elif action == 'windowrestored':
+                Logger.info('WindowSDL: {}'.format(action))
                 self.dispatch('on_restore')
                 self.canvas.ask_update()
 
             elif action == 'windowexposed':
+                Logger.info('WindowSDL: {}'.format(action))
                 self.canvas.ask_update()
 
             elif action == 'windowminimized':
+                Logger.info('WindowSDL: {}'.format(action))
                 self.dispatch('on_minimize')
                 if Config.getboolean('kivy', 'pause_on_minimize'):
                     self.do_pause()
 
             elif action == 'windowmaximized':
+                Logger.info('WindowSDL: {}'.format(action))
                 self.dispatch('on_maximize')
 
             elif action == 'windowhidden':
+                Logger.info('WindowSDL: {}'.format(action))
                 self.dispatch('on_hide')
 
             elif action == 'windowshown':
+                Logger.info('WindowSDL: {}'.format(action))
                 self.dispatch('on_show')
 
             elif action == 'windowfocusgained':
+                Logger.info('WindowSDL: {}'.format(action))
                 self._focus = True
 
             elif action == 'windowfocuslost':
+                Logger.info('WindowSDL: {}'.format(action))
                 self._focus = False
 
             elif action == 'windowenter':
