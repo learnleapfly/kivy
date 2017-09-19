@@ -654,7 +654,7 @@ class WindowSDL(WindowBase):
     def mainloop(self):
         # don't known why, but pygame required a resize event
         # for opengl, before mainloop... window reinit ?
-        # self.dispatch('on_resize', *self.size)
+        self.dispatch('on_resize', *self.size)
 
         while not EventLoop.quit and EventLoop.status == 'started':
             try:
