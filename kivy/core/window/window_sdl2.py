@@ -496,7 +496,7 @@ class WindowSDL(WindowBase):
                 self.dispatch('on_dropfile', dropfile[0])
             # video resize
             elif action == 'windowresized':
-                Logger.info('WindowSDL: windowresized: size:{}, pos:{}'.format(self._win.window_size, self.pos)
+                Logger.info('WindowSDL: windowresized: size:{}'.format(self._win.window_size)
                 self._size = self._win.window_size
                 # don't use trigger here, we want to delay the resize event
                 ev = self._do_resize_ev
