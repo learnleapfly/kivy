@@ -496,6 +496,7 @@ class WindowSDL(WindowBase):
                 self.dispatch('on_dropfile', dropfile[0])
             # video resize
             elif action == 'windowresized':
+                Logger.info('WindowSDL: windowresized: size:{}, pos:{}'.format(self._win.window_size, self.pos)
                 self._size = self._win.window_size
                 # don't use trigger here, we want to delay the resize event
                 ev = self._do_resize_ev
@@ -645,8 +646,10 @@ class WindowSDL(WindowBase):
                 self.close()
                 break
             elif action == 'app_willenterforeground':
+                Logger.info('WindowSDL: app_willenterforeground.')
                 break
             elif action == 'windowrestored':
+                Logger.info('WindowSDL: windowrestored.')
                 break
 
         app.dispatch('on_resume')
