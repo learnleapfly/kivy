@@ -312,6 +312,7 @@ class BuilderBase(object):
             template invocation.
         '''
         # remove rules and templates
+        filename = resource_find(filename) or filename
         self.rules = [x for x in self.rules if x[1].ctx.filename != filename]
         self._clear_matchcache()
         templates = {}
@@ -320,7 +321,6 @@ class BuilderBase(object):
                 templates[x] = y
         self.templates = templates
 
-        filename = resource_find(filename) or filename
         if filename in self.files:
             self.files.remove(filename)
 
@@ -335,7 +335,25 @@ class BuilderBase(object):
             `rulesonly`: bool, defaults to False
                 If True, the Builder will raise an exception if you have a root
                 widget inside the definition.
+            `filename`: str, defaults to None
+                If specified, the filename used to index the kv rules.
+
+        The filename parameter can be used to unload kv strings in the same way
+        as you unload kv files. This can be achieved using pseudo file names
+        e.g.::
+
+            Build.load_string("""
+                <MyRule>:
+                    Label:
+                        text="Hello"
+            """, filename="myrule.kv")
+
+        can be unloaded via::
+
+            Build.unload_file("myrule.kv")
+
         '''
+
         kwargs.setdefault('rulesonly', False)
         self._current_filename = fn = kwargs.get('filename', None)
 

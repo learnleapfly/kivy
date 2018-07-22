@@ -15,11 +15,11 @@ location** and not to site-packages, please see :ref:`alternate-win`.
 
 .. note::
 
-    For Python < 3.5 we use the MinGW compiler. However, for Python 3.5 on
-    Windows we currently only support the microsoft MSVC compiler
-    because of the following MinGW
-    `issue <http://bugs.python.org/issue4709>`_. Generally this should make
-    no difference when using precompiled wheels.
+    For Python < 3.5 we use the MinGW compiler. However, for Python 3.5+ on
+    Windows we currently only support the MSVC compiler
+    because of the following Python
+    `issue 4709 <http://bugs.python.org/issue4709>`_ about MinGW.
+    Generally this should make no difference when using precompiled wheels.
 
 To use Kivy you need `Python <https://www.python.org/downloads/windows/>`_.
 Multiple versions of Python can be installed side by side, but Kivy needs to
@@ -44,17 +44,28 @@ install.
      python -m pip install docutils pygments pypiwin32 kivy.deps.sdl2 kivy.deps.glew
      python -m pip install kivy.deps.gstreamer
 
-   For Python 3.5 only we additionally offer angle which can be used instead of glew
-   and can be installed with::
+   .. note::
 
-    python -m pip install kivy.deps.angle
+       If you encounter a `MemoryError` while installing, add after
+       `pip install` an option `--no-cache-dir`.
+
+   For Python 3.5+, you can also use the angle backend instead of glew. This
+   can be installed with::
+
+     python -m pip install kivy.deps.angle
 
 #. Install kivy::
 
      python -m pip install kivy
 
+#. (Optionally) Install the kivy examples::
+
+     python -m pip install kivy_examples
+
+   The examples are installed in the share directory under the root directory where python is installed.
+
 That's it. You should now be able to ``import kivy`` in python or run a basic
-example::
+example if you installed the kivy examples::
 
     python share\kivy-examples\demo\showcase\main.py
 
@@ -88,21 +99,23 @@ Nightly wheel installation
 --------------------------
 
 .. |cp27_win32| replace:: Python 2.7, 32bit
-.. _cp27_win32: https://kivy.org/downloads/appveyor/kivy/Kivy-1.9.2.dev0-cp27-cp27m-win32.whl
-.. |cp34_win32| replace:: Python 3.4, 32bit
-.. _cp34_win32: https://kivy.org/downloads/appveyor/kivy/Kivy-1.9.2.dev0-cp34-cp34m-win32.whl
+.. _cp27_win32: https://kivy.org/downloads/appveyor/kivy/Kivy-1.11.0.dev0-cp27-cp27m-win32.whl
 .. |cp27_amd64| replace:: Python 2.7, 64bit
-.. _cp27_amd64: https://kivy.org/downloads/appveyor/kivy/Kivy-1.9.2.dev0-cp27-cp27m-win_amd64.whl
-.. |cp34_amd64| replace:: Python 3.4, 64bit
-.. _cp34_amd64: https://kivy.org/downloads/appveyor/kivy/Kivy-1.9.2.dev0-cp34-cp34m-win_amd64.whl
+.. _cp27_amd64: https://kivy.org/downloads/appveyor/kivy/Kivy-1.11.0.dev0-cp27-cp27m-win_amd64.whl
 .. |cp35_win32| replace:: Python 3.5, 32bit
-.. _cp35_win32: https://kivy.org/downloads/appveyor/kivy/Kivy-1.9.2.dev0-cp35-cp35m-win32.whl
+.. _cp35_win32: https://kivy.org/downloads/appveyor/kivy/Kivy-1.11.0.dev0-cp35-cp35m-win32.whl
 .. |cp35_amd64| replace:: Python 3.5, 64bit
-.. _cp35_amd64: https://kivy.org/downloads/appveyor/kivy/Kivy-1.9.2.dev0-cp35-cp35m-win_amd64.whl
+.. _cp35_amd64: https://kivy.org/downloads/appveyor/kivy/Kivy-1.11.0.dev0-cp35-cp35m-win_amd64.whl
 .. |cp36_win32| replace:: Python 3.6, 32bit
-.. _cp36_win32: https://kivy.org/downloads/appveyor/kivy/Kivy-1.9.2.dev0-cp36-cp36m-win32.whl
+.. _cp36_win32: https://kivy.org/downloads/appveyor/kivy/Kivy-1.11.0.dev0-cp36-cp36m-win32.whl
 .. |cp36_amd64| replace:: Python 3.6, 64bit
-.. _cp36_amd64: https://kivy.org/downloads/appveyor/kivy/Kivy-1.9.2.dev0-cp36-cp36m-win_amd64.whl
+.. _cp36_amd64: https://kivy.org/downloads/appveyor/kivy/Kivy-1.11.0.dev0-cp36-cp36m-win_amd64.whl
+.. |cp37_win32| replace:: Python 3.7, 32bit
+.. _cp37_win32: https://kivy.org/downloads/appveyor/kivy/Kivy-1.11.0.dev0-cp37-cp37m-win32.whl
+.. |cp37_amd64| replace:: Python 3.7, 64bit
+.. _cp37_amd64: https://kivy.org/downloads/appveyor/kivy/Kivy-1.11.0.dev0-cp37-cp37m-win_amd64.whl
+.. |examples_whl| replace:: Kivy examples
+.. _examples_whl: https://kivy.org/downloads/appveyor/kivy/Kivy_examples-1.11.0.dev0-py2.py3-none-any.whl
 
 .. warning::
 
@@ -116,20 +129,24 @@ doing ``python -m pip install kivy`` we'll install one of these wheels as
 follows.
 
 + |cp27_win32|_
-+ |cp34_win32|_
 + |cp35_win32|_
 + |cp36_win32|_
++ |cp37_win32|_
 
 - |cp27_amd64|_
-- |cp34_amd64|_
 - |cp35_amd64|_
 - |cp36_amd64|_
+- |cp37_amd64|_
 
 #. Perform steps 1 and 2 of the above Installation section.
 #. Download the appropriate wheel for your system.
 #. Install it with ``python -m pip install wheel-name`` where ``wheel-name``
    is the name of the renamed file and add deps to the `PATH`.
 
+Kivy examples are separated from the core because of their size. The examples
+can be installed separately on both Python 2 and 3 with this single wheel:
+
+- |examples_whl|_
 
 .. _kivy-dependencies:
 
@@ -147,7 +164,7 @@ Currently on Windows, we provide the following dependency wheels:
   `angle (3.5 only) <https://github.com/Microsoft/angle>`_ for OpenGL
 * `sdl2 <https://libsdl.org>`_ for control and/or OpenGL.
 
-One can select which of these to use for OpenGL use using the 
+One can select which of these to use for OpenGL use using the
 `KIVY_GL_BACKEND` envrionment variable by setting it to `glew`
 (the default), `angle`, or `sdl2`. `angle` is currently
 in an experimental phase as a substitute for `glew` on Python
@@ -176,7 +193,7 @@ command line as `well <http://rogerdudler.github.io/git-guide/>`_ as
 installed.
 
 Walking the path! To add your python to the path, simply open your command line
-and then us the ``cd`` command to change the current directory to where python
+and then use the ``cd`` command to change the current directory to where python
 is installed, e.g. ``cd C:\Python27``. Alternatively if you only have one
 python version installed, permanently add the python directory to the path for
 `cmd <http://www.computerhope.com/issues/ch000549.htm>`_ or
@@ -205,7 +222,7 @@ kivy with git rather than a wheel there are some additional steps:
 
 #. Get the compiler.
    For Python < 3.5 we use mingwpy as follows.
-   
+
    #. Create the
       ``python\Lib\distutils\distutils.cfg`` file and add the two lines::
 
@@ -219,8 +236,8 @@ kivy with git rather than a wheel there are some additional steps:
    For Python 3.5 we use the MSVC compiler. For 3.5,
    `Visual Studio 2015 <https://www.visualstudio.com/downloads/>`_ is
    required, which is availible for free. Just download and install it and
-   you'll be good to go. 
-   
+   you'll be good to go.
+
    Visual Studio is very big so you can also use the smaller,
    `Visual C Build Tools instead
    <https://github.com/kivy/kivy/wiki/Using-Visual-C---Build-Tools-instead-of-Visual-Studio-on-Windows>`_.
@@ -238,9 +255,11 @@ kivy with git rather than a wheel there are some additional steps:
    These variables must be set everytime you recompile kivy.
 
 #. Install the other dependencies as well as their dev versions (you can skip
-   gstreamer and gstreamer_dev if you aren't going to use video/audio)::
+   gstreamer and gstreamer_dev if you aren't going to use video/audio):
 
-     python -m pip install cython docutils pygments pypiwin32 kivy.deps.sdl2 \
+   .. parsed-literal::
+
+     python -m pip install |cython_install| docutils pygments pypiwin32 kivy.deps.sdl2 \
      kivy.deps.glew kivy.deps.gstreamer kivy.deps.glew_dev kivy.deps.sdl2_dev \
      kivy.deps.gstreamer_dev
 
@@ -288,7 +307,8 @@ favorite location, do the following:
 
 #. Move the contents of ``python\Lib\site-packages\kivy\deps`` to
    ``your-path\kivy\deps`` where ``your-path`` is the path where your kivy is
-   located.
+   located. That means if you cloned from GitHub, the ``deps`` have to end up
+   in the **inner** ``kivy`` folder.
 #. Remove the ``python\Lib\site-packages\kivy`` directory altogether.
 #. From ``python\Lib\site-packages`` move **all** ``kivy.deps.*.dist-info``
    directories to ``your-path`` right next to ``kivy``.
@@ -311,7 +331,7 @@ Making Python available anywhere
 There are two methods for launching python on your ``*.py`` files.
 
 Double-click method
-~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^
 
 If you only have one Python installed, you can associate all ``*.py`` files
 with your python, if it isn't already, and then run it by double clicking. Or
@@ -330,7 +350,7 @@ you can only do it once if you want to be able to choose each time:
 #. You are done. Open the file.
 
 Send-to method
-~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^
 
 You can launch a .py file with our Python using the Send-to menu:
 

@@ -6,7 +6,7 @@ Create a package for IOS
 .. note::
 
     Currently, packages for iOS can only be generated with Python 2.7. Python
-    3.3+ support is on the way.
+    3.4+ support is on the way.
 
 The overall process for creating a package for IOS can be explained in 4 steps:
 
@@ -17,14 +17,16 @@ The overall process for creating a package for IOS can be explained in 4 steps:
 Prerequisites
 -------------
 
-You need to install some dependencies, like cython, autotools, etc. We
+You need to install some dependencies, like Cython, autotools, etc. We
 encourage you to use `Homebrew <http://mxcl.github.com/homebrew/>`_ to install
-those dependencies::
+those dependencies:
+
+.. parsed-literal::
 
     brew install autoconf automake libtool pkg-config
     brew link libtool
     sudo easy_install pip
-    sudo pip install cython==0.23
+    sudo pip install |cython_install|
 
 For more detail, see :ref:`IOS Prerequisites <packaging_ios_prerequisites>`.
 Just ensure that everything is ok before starting the second step!
