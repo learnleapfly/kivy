@@ -54,7 +54,8 @@ For information on configuring your :class:`~kivy.app.App`, please see the
 Available configuration tokens
 ------------------------------
 
-.. |log_levels| replace:: 'debug', 'info', 'warning', 'error' or 'critical'
+.. |log_levels| replace::
+    'trace', 'debug', 'info', 'warning', 'error' or 'critical'
 
 :kivy:
 
@@ -89,6 +90,15 @@ Available configuration tokens
         Set the minimum log level to use.
     `log_name`: string
         Format string to use for the filename of log file.
+
+    `log_maxfiles`: int
+        Keep log_maxfiles recent logfiles while purging the log directory. Set
+        'log_maxfiles' to -1 to disable logfile purging (eg keep all logfiles).
+
+        .. note::
+            You end up with 'log_maxfiles + 1' logfiles because the logger
+            adds a new one after purging.
+
     `window_icon`: string
         Path of the window icon. Use this if you want to replace the default
         pygame icon.
@@ -128,8 +138,9 @@ Available configuration tokens
     `borderless`: int , one of 0 or 1
         If set to `1`, removes the window border/decoration. Window resizing
         must also be disabled to hide the resizing border.
-    `window_state`: string , one of 'visible', 'hidden', 'maximized' \
+    `window_state`: string , one of 'visible', 'hidden', 'maximized'
                     or 'minimized'
+
         Sets the window state, defaults to 'visible'. This option is available
         only for the SDL2 window provider and it should be used on desktop
         OSes.
@@ -192,11 +203,13 @@ Available configuration tokens
         time.
     `kivy_clock`: one of `default`, `interrupt`, `free_all`, `free_only`
         The clock type to use with kivy. See :mod:`kivy.clock`.
+
     `default_font`: list, defaults to ['Roboto',
     'data/fonts/Roboto-Regular.ttf', 'data/fonts/Roboto-Italic.ttf',
     'data/fonts/Roboto-Bold.ttf', 'data/fonts/Roboto-BoldItalic.ttf']
 
         Default font used for widgets displaying any text.
+
     `allow_screensaver`: int, one of 0 or 1, defaults to 1
         Allow the device to show a screen saver, or to go to sleep
         on mobile devices. Only works for the sdl2 window provider.
@@ -322,7 +335,7 @@ from weakref import ref
 _is_rpi = exists('/opt/vc/include/bcm_host.h')
 
 # Version number of current configuration format
-KIVY_CONFIG_VERSION = 18
+KIVY_CONFIG_VERSION = 19
 
 Config = None
 '''The default Kivy configuration object. This is a :class:`ConfigParser`
@@ -825,6 +838,9 @@ if not environ.get('KIVY_DOC_INCLUDE'):
 
         elif version == 17:
             Config.setdefault('graphics', 'allow_screensaver', '1')
+
+        elif version == 18:
+            Config.setdefault('kivy', 'log_maxfiles', '100')
 
         # elif version == 1:
         #    # add here the command for upgrading from configuration 0 to 1

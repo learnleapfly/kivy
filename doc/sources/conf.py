@@ -69,6 +69,7 @@ base = 'autobuild.py-done'
 if not os.path.exists(os.path.join(os.path.dirname(base_dir), base)):
     import autobuild
 import gallery
+gallery.write_all_rst_pages()
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -202,7 +203,9 @@ latex_additional_files = ['kivystyle.sty',
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
-latex_use_parts = True
+# DEPRECATED! later_use_parts = True
+# see sphinx.builder.latex.validate_config_values
+latex_toplevel_sectioning = 'part'
 
 # Additional stuff for the LaTeX preamble.
 # latex_preamble = ''
