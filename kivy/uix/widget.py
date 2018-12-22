@@ -328,11 +328,14 @@ class Widget(WidgetBase):
             self._context = get_current_context()
 
         no_builder = '__no_builder' in kwargs
+        self._disabled_value = False
         if no_builder:
             del kwargs['__no_builder']
         on_args = {k: v for k, v in kwargs.items() if k[:3] == 'on_'}
         for key in on_args:
             del kwargs[key]
+
+        self._disabled_count = 0
 
         super(Widget, self).__init__(**kwargs)
 
@@ -479,10 +482,6 @@ class Widget(WidgetBase):
             if child.dispatch('on_touch_up', touch):
                 return True
 
-    def on_disabled(self, instance, value):
-        for child in self.children:
-            child.disabled = value
-
     #
     # Tree management
     #
@@ -532,8 +531,7 @@ class Widget(WidgetBase):
                                   % (widget, parent))
         widget.parent = parent = self
         # Child will be disabled if added to a disabled parent.
-        if parent.disabled:
-            widget.disabled = True
+        widget._disabled_count = self._disabled_count
 
         canvas = self.canvas.before if canvas == 'before' else \
             self.canvas.after if canvas == 'after' else self.canvas
@@ -634,7 +632,7 @@ class Widget(WidgetBase):
         fbo = Fbo(size=self.size, with_stencilbuffer=True)
 
         with fbo:
-            ClearColor(0, 0, 0, 1)
+            ClearColor(0, 0, 0, 0)
             ClearBuffers()
             Scale(1, -1, 1)
             Translate(-self.x, -self.y - self.height, 0)
@@ -1028,15 +1026,20 @@ class Widget(WidgetBase):
     '''
 
     id = StringProperty(None, allownone=True)
-    '''Unique identifier of the widget in the tree.
+    '''Identifier of the widget in the tree.
 
     :attr:`id` is a :class:`~kivy.properties.StringProperty` and defaults to
     None.
 
+    .. note::
+
+        The :attr:`id` is not the same as ``id`` in the kv language. For the
+        latter, see :attr:`ids` and :ref:`Kivy Language: ids <kv-lang-ids>`.
+
     .. warning::
 
-        If the :attr:`id` is already used in the tree, an exception will
-        be raised.
+        The :attr:`id` property has been deprecated and will be removed
+        completely in future versions.
     '''
 
     children = ListProperty([])
@@ -1305,8 +1308,36 @@ class Widget(WidgetBase):
     See :class:`~kivy.graphics.Canvas` for more information about the usage.
     '''
 
-    disabled = BooleanProperty(False)
+    def get_disabled(self):
+        return self._disabled_count > 0
+
+    def set_disabled(self, value):
+        if value != self._disabled_value:
+            self._disabled_value = value
+            if value:
+                self.inc_disabled()
+            else:
+                self.dec_disabled()
+
+    def inc_disabled(self):
+        self._disabled_count += 1
+        if self._disabled_count == 1:
+            self.property('disabled').dispatch(self)
+        for c in self.children:
+            c.inc_disabled()
+
+    def dec_disabled(self):
+        self._disabled_count -= 1
+        if self._disabled_count == 0:
+            self.property('disabled').dispatch(self)
+        for c in self.children:
+            c.dec_disabled()
+
+    disabled = AliasProperty(get_disabled, set_disabled)
     '''Indicates whether this widget can interact with input or not.
+
+    :attr:`disabled` is an :class:`~kivy.properties.AliasProperty` and
+    defaults to False.
 
     .. note::
 
@@ -1317,6 +1348,10 @@ class Widget(WidgetBase):
 
     .. versionadded:: 1.8.0
 
-    :attr:`disabled` is a :class:`~kivy.properties.BooleanProperty` and
-    defaults to False.
+    .. versionchanged:: 1.10.1
+
+        :attr:`disabled` was changed from a
+        :class:`~kivy.properties.BooleanProperty` to an
+        :class:`~kivy.properties.AliasProperty` to allow access to its
+        previous state when a parent's disabled state is changed.
     '''

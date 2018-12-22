@@ -2,29 +2,23 @@ version: 1.0.{build}
 os: Visual Studio 2015
 environment:
   WHEEL_DIR: C:\kivy_wheels
+  UPLOAD_DIR: C:\kivy_upload
   KIVY_BUILD_DIR: C:\kivy_build
-  AIRPLANE_CHARGE:
-    secure: HgQr7XMKpB6lWn33SKv0GyYZbh1RfpgvaIKEE0B54R5XHJujQg5dhOEB3Vc2CfAqCprX+CGxXAjQwFnuv6pJeA3++9Z8/1SfFuEqCF59J7PqsDs2thA8lNHLRsThvRVJrBt2jcb1wrG3Nf3sz3vi7e+rBzYjprkcYiTP0XJ5FdQekyFTTjuXYaRBGWrwGX81dEVVUkGFuEZFYWJq2Yf/PkFGOX+IN0CjgpFB0pGfZSJcIG7mvscurfG/KvckLhNUINprUKt0pJ8iCN0iufsbmrOnuG+WC8AHktvlSxzHSfCm8zmhSZTkDNkJfpYHapFagQQThmiYq8PqsVIC0XOz+j4KLljc6bxyhE0oPtOPg4DohBdqLI28V1XB/Kqh7CCZR50wAw567voWVOtKsyets5oeywZH1q/gtK6stC5t7v+a2s0w1I2IEW6p2aPy7plreZj15QCgIR8h6JgIuMuwqiaVCUuhej/GauCZG/9jIBJpTf1NkBa9k4vIxHPq5R5/ltYX8za49vz5ImdLe1qlTFwy9fegMpb+D5m3y3ilm+t5xkDmqXQau1oVWIVd8jf0DawWqkNsKLp6hbYr51gclS+Gc7NVKwvFtcmoAfbvNCGBDH4vF6cR2wNhy6RDjjqDgIStnpUs3fKS9bKOyrv9+394esQqEuAXgLtC2vUMk+z3Hf8V18AFYKZfZmWxiGGrjI6YQCBOBOdh5VO5cASqtoTU22OvAPhXT7gX2JG96Rc9yf/K8DEvzuWo3lArDAclh2zLm++1SOh54dDiAiMZvLkNXu5tAsg60c+rJCx4FQ9ra0/GcFY1LKJntdKvpQyBkp4wKAvq3YyV7Rnx8u6PULXXG2rS6i7m+asLrY+FSCO5oRmLrMv5pEv0cF/BOAh0RGR6medX8ASmM40sHqz+WC9WJfaSUZplSzQwHxXCr/AzK40mOTtKgkg8e8tqwNzjI8mdjx0kwcu8zuOeUK6U6l83voGKbli1gzinkLvzhjvF1TXZwpT1y/HvAs5dGwXVfdigeOqcfmIOxXStPmaZ4CZRKVK3CgweYzpETyT6Pm5H3jANcAuyYuphJr7YrfHfWKAg6N3Q0r3AfzliOuIBm3DVfm2RuI8USGJxRsjaDX8LB8sdhrCPLUYBh1RNhYol5bVEM1IX+BcpXzIyqv00eSMTvN3G7KdsM+/8LGlnEM+apIgnBlVfcWOQI8rzBkXuJvExSwDhKzncGWbi12UapEVsE/QnVpDiwbiPdZtQQzQ=
-  GDRIVE_CLIENT_ID:
-    secure: iGAZpJPOTLhRmK7X60xzRZm1S0PbmoMwoVJdd8WiKBH34Tqsd6UEFhPjLLok7J0+xWStS8E3fwEQh4Wzn1BCXhry5Qv8FLD41oskVpiSwdc=
-  GDRIVE_CLIENT_SECRET:
-    secure: 7J8TZnhr3MsF5rveMVVkbrr9tzTwGG6rHWZMorW0WN4=
-  GDRIVE_KIVY_UPLOAD_ID: 0B1_HB9J8mZepOV81UHpDbmg5SWM
+  DO_WHEEL: True
+  KEY_WITH_NO_TEETH:
+    secure: 7cS7xjpCL/VH5jIIGSf13camkiu1enMh5hO0UsBgmRlBXyKk3t/7HB79ofyJKgDb
+  SERVER_IP: 159.203.106.198
   USE_SDL2: 1
   USE_GSTREAMER: 1
   KIVY_USE_SETUPTOOLS: 1
   KIVY_SPLIT_EXAMPLES: 1
+  MSYSTEM: MINGW64
+  CHERE_INVOKING: 1
   matrix:
   - PYVER: 27
     BITTNESS: 86
     COMPILER: mingw
   - PYVER: 27
-    BITTNESS: 64
-    COMPILER: mingw
-  - PYVER: 34
-    BITTNESS: 86
-    COMPILER: mingw
-  - PYVER: 34
     BITTNESS: 64
     COMPILER: mingw
   - PYVER: 35
@@ -42,6 +36,7 @@ environment:
 install:
 - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-desktop.ps1'))
 build_script:
+- nuget install secure-file -ExcludeVersion
 - ps: >-
     function Check-Error
 
@@ -52,8 +47,10 @@ build_script:
       }
     }
 
-
-    echo "Bitness=$env:BITTNESS, scheduled=$env:APPVEYOR_SCHEDULED_BUILD, forced=$env:APPVEYOR_FORCED_BUILD, rebuild=$env:APPVEYOR_RE_BUILD, tagged=$env:APPVEYOR_REPO_TAG"
+    echo "Bitness=$env:BITTNESS, scheduled=$env:APPVEYOR_SCHEDULED_BUILD, forced=$env:APPVEYOR_FORCED_BUILD"
+    echo "rebuild=$env:APPVEYOR_RE_BUILD, tagged=$env:APPVEYOR_REPO_TAG, pr=$env:APPVEYOR_PULL_REQUEST_NUMBER"
+    echo "commit=$env:APPVEYOR_REPO_COMMIT_MESSAGE, branch"
+    echo "branch=APPVEYOR_REPO_BRANCH"
 
 
     cd $env:APPVEYOR_BUILD_FOLDER
@@ -74,12 +71,6 @@ build_script:
     mkdir "$env:WHEEL_DIR"
 
     Check-Error
-
-
-    C:\Python27\Scripts\pip.exe install pydrive
-
-    Check-Error
-
 
 
     if ($env:BITTNESS -eq "64") {
@@ -123,7 +114,7 @@ build_script:
     }
 
 
-    $DO_WHEEL = "True"
+    $DO_WHEEL = $env:DO_WHEEL
 
     # Set new wheel name, keep default if release (tag)
     # release: Kivy-X.Y.Z-cpAB-cpABm-ARCH.whl (Kivy_examples-X.Y.Z-py2.py3-none-any.whl)
@@ -132,13 +123,9 @@ build_script:
 
     if ($env:APPVEYOR_REPO_TAG -eq "true"){
       $WHEEL_NAME = "dev0-"
-    } elseif ($env:APPVEYOR_SCHEDULED_BUILD -eq "True" -or $env:APPVEYOR_FORCED_BUILD -eq "True" -or $env:APPVEYOR_RE_BUILD -eq "True"){
+    } elseif (-not $env:APPVEYOR_PULL_REQUEST_NUMBER -and($env:APPVEYOR_SCHEDULED_BUILD -eq "True" -or $env:APPVEYOR_REPO_COMMIT_MESSAGE.Contains("[build wheel]") -or $env:APPVEYOR_REPO_COMMIT_MESSAGE.Contains("[build wheel win]"))){
       $WHEEL_NAME = "dev0.$WHEEL_DATE`.$GIT_TAG-"
     } else {
-      $DO_WHEEL = "False"
-    }
-
-    if ($env:APPVEYOR_REPO_BRANCH -ne "master") {
       $DO_WHEEL = "False"
     }
 
@@ -161,7 +148,9 @@ build_script:
 
     Check-Error
 
-    pip install kivy.deps.angle
+    if ($env:COMPILER -eq "msvc") {
+      pip install kivy.deps.angle
+    }
 
     Copy-Item "$PYTHON_ROOT\Lib\site-packages\kivy\deps\*" -destination "$env:APPVEYOR_BUILD_FOLDER\kivy\deps" -recurse
 
@@ -176,7 +165,9 @@ build_script:
       python setup.py bdist_wheel -d "$env:WHEEL_DIR"
       Check-Error
 
-      if ($env:BITTNESS -eq "64" -and $env:PYVER -eq "27") {
+      if ($env:BITTNESS -eq "64" -and $env:PYVER -eq "36") {
+        python setup.py sdist --formats=gztar -d "$env:WHEEL_DIR"
+        Check-Error
         python setup.py bdist_wheel -d "$env:WHEEL_DIR" --build_examples --universal
         Check-Error
       }
@@ -191,16 +182,29 @@ build_script:
         echo "Nightly file: $env:WHEEL_DIR\$WHEEL_NIGHTLY"
         Check-Error
 
-        echo "Copying from default $WHEEL_DEFAULT to nightly $WHEEL_NIGHTLY"
-        Copy-Item "$env:WHEEL_DIR\$WHEEL_DEFAULT" "$env:WHEEL_DIR\$WHEEL_NIGHTLY"
-        Check-Error
+        if (-not (Test-Path "$env:WHEEL_DIR\$WHEEL_NIGHTLY")){
+          echo "Copying from default $WHEEL_DEFAULT to nightly $WHEEL_NIGHTLY"
+          Copy-Item "$env:WHEEL_DIR\$WHEEL_DEFAULT" "$env:WHEEL_DIR\$WHEEL_NIGHTLY"
+          Check-Error
+        }
       }
 
-      C:\Python27\python.exe C:\projects\kivy-sdk-packager\win\gdrive.py upload "$env:GDRIVE_KIVY_UPLOAD_ID" "$env:WHEEL_DIR\*"
+      mkdir "$env:UPLOAD_DIR"
+      Check-Error
+      cp "$env:WHEEL_DIR\*.whl" "$env:UPLOAD_DIR"
+      Check-Error
+      cp "$env:WHEEL_DIR\*.gz" "$env:UPLOAD_DIR"
       Check-Error
 
-      C:\Python27\python.exe C:\projects\kivy-sdk-packager\win\gdrive.py delete_older "$env:GDRIVE_KIVY_UPLOAD_ID" "15"
+      secure-file\tools\secure-file -decrypt C:\projects\kivy\.ci\id_rsa.enc -secret "$env:KEY_WITH_NO_TEETH"
       Check-Error
+
+      echo "Uploading Kivy*:"
+      dir $env:WHEEL_DIR
+      dir $env:UPLOAD_DIR
+      C:\msys64\usr\bin\bash --login -c "/c/projects/kivy/.ci/appveyor-server-upload.sh $env:SERVER_IP '$env:UPLOAD_DIR' 'Kivy*' ci/win/kivy/"
+      Check-Error
+
     }
 test_script:
 - ps: >-
@@ -215,7 +219,11 @@ test_script:
 
 
     if ($env:DO_TEST -eq "True"){
-      $env:KIVY_GL_BACKEND = "angle_sdl2"
+      if ($env:COMPILER -eq "msvc") {
+        $env:KIVY_GL_BACKEND = "angle_sdl2"
+      } else {
+        $env:KIVY_GL_BACKEND = "mock"
+      }
       python -m nose.core kivy/tests
       Check-Error
     }

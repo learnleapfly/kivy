@@ -323,13 +323,10 @@ from kivy.logger import Logger
 from kivy.event import EventDispatcher
 from kivy.lang import Builder
 from kivy.resources import resource_find
-from kivy.utils import platform as core_platform
+from kivy.utils import platform
 from kivy.uix.widget import Widget
 from kivy.properties import ObjectProperty, StringProperty
 from kivy.setupconfig import USE_SDL2
-
-
-platform = core_platform
 
 
 class App(EventDispatcher):
@@ -405,10 +402,10 @@ class App(EventDispatcher):
             class MyApp(App):
                 icon = 'customicon.png'
 
-         Recommended 256x256 or 1024x1024? for GNU/Linux and Mac OSX
-         32x32 for Windows7 or less. <= 256x256 for windows 8
-         256x256 does work (on Windows 8 at least), but is scaled
-         down and doesn't look as good as a 32x32 icon.
+        Recommended 256x256 or 1024x1024? for GNU/Linux and Mac OSX
+        32x32 for Windows7 or less. <= 256x256 for windows 8
+        256x256 does work (on Windows 8 at least), but is scaled
+        down and doesn't look as good as a 32x32 icon.
     '''
 
     use_kivy_settings = True
@@ -463,7 +460,8 @@ class App(EventDispatcher):
     # Return the current running App instance
     _running_app = None
 
-    __events__ = ('on_start', 'on_stop', 'on_pause', 'on_resume')
+    __events__ = ('on_start', 'on_stop', 'on_pause', 'on_resume',
+                  'on_config_change', )
 
     def __init__(self, **kwargs):
         App._running_app = self
@@ -898,6 +896,9 @@ class App(EventDispatcher):
     def on_config_change(self, config, section, key, value):
         '''Event handler fired when a configuration token has been changed by
         the settings page.
+
+        .. versionchanged:: 1.10.1
+           Added corresponding ``on_config_change`` event.
         '''
         pass
 
@@ -1017,7 +1018,7 @@ class App(EventDispatcher):
     #
 
     def _on_config_change(self, *largs):
-        self.on_config_change(*largs[1:])
+        self.dispatch('on_config_change', *largs[1:])
 
     def _install_settings_keys(self, window):
         window.bind(on_keyboard=self._on_keyboard_settings)
